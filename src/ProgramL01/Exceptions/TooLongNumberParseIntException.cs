@@ -1,15 +1,11 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
-namespace ESystem.Mentoring.ProgramL01.Exceptions
+namespace ESystems.Mentoring.ProgramL01.Exceptions
 {
-
     [Serializable]
     public sealed class TooLongNumberParseIntException : Exception
     {
-        public int[] Digits { get; }
-        public int Basis { get; }
-
         public TooLongNumberParseIntException(int[] digits, int basis, Exception innerException)
             : base($"{digits?.Length} is too long for the {basis}-base system", innerException)
         {
@@ -17,7 +13,8 @@ namespace ESystem.Mentoring.ProgramL01.Exceptions
             Basis = basis;
         }
 
-        public TooLongNumberParseIntException(int[] digits, int basis) : this(digits, basis, null)
+        public TooLongNumberParseIntException(int[] digits, int basis)
+            : this(digits, basis, null)
         {
         }
 
@@ -30,6 +27,10 @@ namespace ESystem.Mentoring.ProgramL01.Exceptions
 
             Basis = info.GetInt32(nameof(Basis));
         }
+
+        public int[] Digits { get; }
+
+        public int Basis { get; }
 
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {

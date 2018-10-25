@@ -1,8 +1,9 @@
 ﻿using System;
 
-namespace ESystem.Mentoring.ProgramL01.Exceptions
+namespace ESystems.Mentoring.ProgramL01.Exceptions
 {
-    public abstract class ParseIntException: Exception
+    // ReSharper disable once UnusedMember.Global
+    public abstract class ParseIntException : Exception
     {
     }
 }

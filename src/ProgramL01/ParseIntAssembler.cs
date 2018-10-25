@@ -1,14 +1,12 @@
-﻿using ESystem.Mentoring.ProgramL01.Exceptions;
-using System;
+﻿using System;
 using System.Linq;
+
+using ESystems.Mentoring.ProgramL01.Exceptions;
 
 namespace ESystems.Mentoring.ProgramL01
 {
     public class ParseIntAssembler
     {
-        public int Basis { get; }
-        public int Capacity { get; }
-
         public ParseIntAssembler(int basis)
         {
             if (basis < 2)
@@ -19,6 +17,10 @@ namespace ESystems.Mentoring.ProgramL01
             Basis = basis;
             Capacity = (int)Math.Floor(Math.Log(long.MaxValue) / Math.Log(Basis));
         }
+
+        public int Basis { get; }
+
+        public int Capacity { get; }
 
         public long Assembly(int[] digits)
         {
@@ -41,11 +43,9 @@ namespace ESystems.Mentoring.ProgramL01
             }
 
             return digits
-                .AsParallel()
                 .Aggregate(
-                    () => new ParseIntSeed(),
+                    new ParseIntSeed(),
                     (seed, digit) => seed.Concat(new ParseIntSeed(digit, Basis)),
-                    (left, right) => left.Concat(right),
                     seed => seed.Value);
         }
 
