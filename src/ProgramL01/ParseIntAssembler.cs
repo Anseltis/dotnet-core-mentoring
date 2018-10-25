@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace ESystems.Mentoring.ProgramL01
 {
-    class ParseIntAssembler
+    public class ParseIntAssembler
     {
         public int Basis { get; }
         public int Capacity { get; }
@@ -41,8 +41,12 @@ namespace ESystems.Mentoring.ProgramL01
             }
 
             return digits
-                .Aggregate(new ParseIntSeed(), (seed, digit) => seed.Concat(new ParseIntSeed(digit, Basis)))
-                .Value;
+                .AsParallel()
+                .Aggregate(
+                    () => new ParseIntSeed(),
+                    (seed, digit) => seed.Concat(new ParseIntSeed(digit, Basis)),
+                    (left, right) => left.Concat(right),
+                    seed => seed.Value);
         }
 
         private bool IsDigit(int digit) => digit >= 0 && digit < Basis;
