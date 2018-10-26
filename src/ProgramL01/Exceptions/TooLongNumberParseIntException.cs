@@ -6,19 +6,20 @@ namespace ESystems.Mentoring.ProgramL01.Exceptions
     [Serializable]
     public sealed class TooLongNumberParseIntException : Exception
     {
-        public TooLongNumberParseIntException(int[] digits, int basis, Exception innerException)
-            : base($"{digits?.Length} is too long for the {basis}-base system", innerException)
+        public TooLongNumberParseIntException(int length, int basis, Exception innerException)
+            : base($"{length} is too long for the {basis}-base system", innerException)
         {
-            Digits = digits;
+            Length = length;
             Basis = basis;
         }
 
-        public TooLongNumberParseIntException(int[] digits, int basis)
-            : this(digits, basis, null)
+        public TooLongNumberParseIntException(int length, int basis)
+            : this(length, basis, null)
         {
         }
 
-        public TooLongNumberParseIntException(SerializationInfo info, StreamingContext context)
+        private TooLongNumberParseIntException(SerializationInfo info, StreamingContext context)
+            : base(info, context)
         {
             if (info == null)
             {
@@ -26,9 +27,10 @@ namespace ESystems.Mentoring.ProgramL01.Exceptions
             }
 
             Basis = info.GetInt32(nameof(Basis));
+            Length = info.GetInt32(nameof(Length));
         }
 
-        public int[] Digits { get; }
+        public int Length { get; }
 
         public int Basis { get; }
 
@@ -42,6 +44,7 @@ namespace ESystems.Mentoring.ProgramL01.Exceptions
             base.GetObjectData(info, context);
 
             info.AddValue(nameof(Basis), Basis);
+            info.AddValue(nameof(Length), Length);
         }
     }
 }

@@ -1,13 +1,16 @@
 ﻿using System;
 
+using ESystems.Mentoring.ProgramL01.Assembler;
+using ESystems.Mentoring.ProgramL01.Digitizer;
+
 namespace ESystems.Mentoring.ProgramL01
 {
-    internal class Program
+    internal sealed class Program
     {
         internal static void Main()
         {
-            var assembler = new ParseIntAssembler(10);
-            Console.WriteLine(assembler.Assembly(new[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 }));
+            var converter = new ParseIntConverter(new ParseIntDigitizer(), new ParseIntAssembler(10));
+            Console.WriteLine(converter.ToInt("12458"));
         }
     }
 }

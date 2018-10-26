@@ -1,6 +1,6 @@
-﻿namespace ESystems.Mentoring.ProgramL01
+﻿namespace ESystems.Mentoring.ProgramL01.Assembler
 {
-    public class ParseIntSeed
+    public sealed class ParseIntSeed
     {
         public ParseIntSeed()
         {

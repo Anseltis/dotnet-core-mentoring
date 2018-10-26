@@ -4,20 +4,20 @@ using System.Runtime.Serialization;
 namespace ESystems.Mentoring.ProgramL01.Exceptions
 {
     [Serializable]
-    public sealed class WrongBasisParseIntException : Exception
+    public sealed class NotDigitParseIntException : Exception
     {
-        public WrongBasisParseIntException(int basis, Exception innerException)
-            : base($"{basis} is wrong for digital system", innerException)
+        public NotDigitParseIntException(char character, Exception innerException)
+            : base($"{character} is not a digit", innerException)
         {
-            Basis = basis;
+            Character = Character;
         }
 
-        public WrongBasisParseIntException(int basis)
-            : this(basis, null)
+        public NotDigitParseIntException(char character)
+            : this(character, null)
         {
         }
 
-        private WrongBasisParseIntException(SerializationInfo info, StreamingContext context)
+        private NotDigitParseIntException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
             if (info == null)
@@ -25,10 +25,10 @@ namespace ESystems.Mentoring.ProgramL01.Exceptions
                 throw new ArgumentNullException(nameof(info));
             }
 
-            Basis = info.GetInt32(nameof(Basis));
+            Character = info.GetChar(nameof(Character));
         }
 
-        public int Basis { get; }
+        public char Character { get; }
 
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
@@ -39,7 +39,7 @@ namespace ESystems.Mentoring.ProgramL01.Exceptions
 
             base.GetObjectData(info, context);
 
-            info.AddValue(nameof(Basis), Basis);
+            info.AddValue(nameof(Character), Character);
         }
     }
 }

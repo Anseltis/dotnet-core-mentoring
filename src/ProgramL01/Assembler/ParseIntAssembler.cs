@@ -1,11 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 using ESystems.Mentoring.ProgramL01.Exceptions;
 
-namespace ESystems.Mentoring.ProgramL01
+namespace ESystems.Mentoring.ProgramL01.Assembler
 {
-    public class ParseIntAssembler
+    public sealed class ParseIntAssembler : IParseIntAssembler
     {
         public ParseIntAssembler(int basis)
         {
@@ -22,23 +23,22 @@ namespace ESystems.Mentoring.ProgramL01
 
         public int Capacity { get; }
 
-        public long Assembly(int[] digits)
+        public long Assembly(IReadOnlyList<int> digits)
         {
             if (digits == null)
             {
                 throw new ArgumentNullException(nameof(digits));
             }
 
-            if (digits.Length > Capacity)
+            if (digits.Count > Capacity)
             {
-                throw new TooLongNumberParseIntException(digits, Basis);
+                throw new TooLongNumberParseIntException(digits.Count, Basis);
             }
 
-            if (digits.Any(digit => !IsDigit(digit)))
+            if (digits.Any(digit => !IsValidDigit(digit)))
             {
-                throw new AggregateException(
-                    digits
-                        .Where(IsDigit)
+                throw new AggregateException(digits
+                        .Where(digit => !IsValidDigit(digit))
                         .Select(digit => new WrongDigitParseIntException(digit, Basis)));
             }
 
@@ -49,6 +49,6 @@ namespace ESystems.Mentoring.ProgramL01
                     seed => seed.Value);
         }
 
-        private bool IsDigit(int digit) => digit >= 0 && digit < Basis;
+        private bool IsValidDigit(int digit) => digit >= 0 && digit < Basis;
     }
 }

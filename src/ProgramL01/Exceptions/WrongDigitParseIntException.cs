@@ -18,7 +18,8 @@ namespace ESystems.Mentoring.ProgramL01.Exceptions
         {
         }
 
-        public WrongDigitParseIntException(SerializationInfo info, StreamingContext context)
+        private WrongDigitParseIntException(SerializationInfo info, StreamingContext context)
+            : base(info, context)
         {
             if (info == null)
             {
