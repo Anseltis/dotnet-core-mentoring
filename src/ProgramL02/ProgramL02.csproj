@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <RootNamespace>ESystems.Mentoring.ProgramL02</RootNamespace>
+    <AssemblyName>ESystems.Mentoring.ProgramL02</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\FileSystem\FileSystem.csproj" />
+    <ProjectReference Include="..\FileVisiting\FileVisiting.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -7,7 +7,7 @@ namespace ESystems.Mentoring.ProgramL01.Exceptions
     public sealed class NotDigitParseIntException : Exception
     {
         public NotDigitParseIntException(char character, Exception innerException)
-            : base($"{character} is not a digit", innerException)
+            : base($"'{character}' is not a digit", innerException)
         {
             Character = Character;
         }

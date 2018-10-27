@@ -35,6 +35,6 @@ namespace ESystems.Mentoring.ProgramL01.Digitizer
             return sample.Select(ch => ch - FirstChar).ToList();
         }
 
-        private bool IsDigit(char ch) => ch >= FirstChar && ch <= LastChar;
+        private static bool IsDigit(char ch) => ch >= FirstChar && ch <= LastChar;
     }
 }
