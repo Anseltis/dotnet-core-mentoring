@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Linq;
+
+using AutoFixture;
 using FakeItEasy;
 using FluentAssertions;
 using Xunit;
@@ -8,7 +10,6 @@ using ESystems.Mentoring.FileSystem.Interface;
 using ESystems.Mentoring.FileSystem.Interface.Data;
 using ESystems.Mentoring.FileSystem.Interface.Exceptions;
 using ESystems.Mentoring.FileVisiting;
-using AutoFixture;
 
 namespace FileVisitingTest
 {
@@ -83,12 +84,12 @@ namespace FileVisitingTest
 
             var path = fixture.Create<string>();
 
-            var folder1 = new FolderData(fixture.Create<string>(), fixture.Create<string>());
-            var folder2 = new FolderData(fixture.Create<string>(), fixture.Create<string>());
+            var folder1 = fixture.Create<FolderData>();
+            var folder2 = fixture.Create<FolderData>();
 
-            var file1 = new FileData(fixture.Create<string>(), fixture.Create<string>());
-            var file2 = new FileData(fixture.Create<string>(), fixture.Create<string>());
-            var file3 = new FileData(fixture.Create<string>(), fixture.Create<string>());
+            var file1 = fixture.Create<FileData>();
+            var file2 = fixture.Create<FileData>();
+            var file3 = fixture.Create<FileData>();
 
             var service = A.Fake<IFileSystemService>(options => options.Strict());
             A.CallTo(() => service.GetFolders(path)).Returns(new [] {folder1, folder2});
@@ -113,12 +114,12 @@ namespace FileVisitingTest
 
             var path = fixture.Create<string>();
 
-            var folder1 = new FolderData(fixture.Create<string>(), fixture.Create<string>());
-            var folder2 = new FolderData(fixture.Create<string>(), fixture.Create<string>());
+            var folder1 = fixture.Create<FolderData>();
+            var folder2 = fixture.Create<FolderData>();
 
-            var file1 = new FileData(fixture.Create<string>(), fixture.Create<string>());
-            var file2 = new FileData(fixture.Create<string>(), fixture.Create<string>());
-            var file3 = new FileData(fixture.Create<string>(), fixture.Create<string>());
+            var file1 = fixture.Create<FileData>();
+            var file2 = fixture.Create<FileData>();
+            var file3 = fixture.Create<FileData>();
 
             var service = A.Fake<IFileSystemService>(options => options.Strict());
             A.CallTo(() => service.GetFolders(path)).Returns(new[] { folder1, folder2 });
@@ -145,12 +146,12 @@ namespace FileVisitingTest
 
             var path = fixture.Create<string>();
 
-            var folder1 = new FolderData(fixture.Create<string>(), fixture.Create<string>());
-            var folder2 = new FolderData(fixture.Create<string>(), fixture.Create<string>());
+            var folder1 = fixture.Create<FolderData>();
+            var folder2 = fixture.Create<FolderData>();
 
-            var file1 = new FileData(fixture.Create<string>(), fixture.Create<string>());
-            var file2 = new FileData(fixture.Create<string>(), fixture.Create<string>());
-            var file3 = new FileData(fixture.Create<string>(), fixture.Create<string>());
+            var file1 = fixture.Create<FileData>();
+            var file2 = fixture.Create<FileData>();
+            var file3 = fixture.Create<FileData>();
 
             var service = A.Fake<IFileSystemService>(options => options.Strict());
             A.CallTo(() => service.GetFolders(path)).Returns(new[] {folder1, folder2});
