@@ -153,18 +153,18 @@ namespace FileVisitingTest
             var file2 = fixture.Create<FileData>();
             var file3 = fixture.Create<FileData>();
 
+            var exception = new AccessDeniedFileSystemServiceException(folder2.FullName);
+
             var service = A.Fake<IFileSystemService>(options => options.Strict());
             A.CallTo(() => service.GetFolders(path)).Returns(new[] {folder1, folder2});
             A.CallTo(() => service.GetFiles(folder1.FullName)).Returns(new[] {file1, file2});
-            A.CallTo(() => service.GetFiles(folder2.FullName))
-                .Throws(new AccessDeniedFileSystemServiceException(folder2.FullName));
+            A.CallTo(() => service.GetFiles(folder2.FullName)).Throws(exception);
 
             Record.Exception(() =>
                 {
                     var visitor = new FileSystemVisitor(service);
                     visitor.Visit(path).ToArray();
-                }).Should().BeOfType<AccessDeniedFileSystemServiceException>()
-                .Which.Path.Should().Be(folder2.FullName);
+                }).Should().Be(exception);
 
             A.CallTo(() => service.GetFolders(path)).MustHaveHappenedOnceExactly()
                 .Then(A.CallTo(() => service.GetFiles(folder1.FullName)).MustHaveHappenedOnceExactly())

@@ -1,7 +1,8 @@
-﻿using ESystems.Mentoring.FileSystem;
+﻿using System;
+
+using ESystems.Mentoring.FileSystem;
 using ESystems.Mentoring.FileVisiting;
 using ESystems.Mentoring.FileVisiting.Events;
-using System;
 
 namespace ESystems.Mentoring.ProgramL02
 {
@@ -16,7 +17,14 @@ namespace ESystems.Mentoring.ProgramL02
                 .Wrap(visitor => new FilterFileSystemVisitor(visitor))
                 .Initialize(visitor => visitor.Exclude += FileSystemVisitorOnExclude);
 
-            foreach (var result in fileSystemVisitor.Visit(@"D:\JSS\node_modules")) Console.WriteLine(result);
+
+            Console.Write("Read path: ");
+            var path = Console.ReadLine();
+            Console.WriteLine("Result:");
+            foreach (var file in fileSystemVisitor.Visit(path))
+            {
+                Console.WriteLine(file);
+            }
         }
 
         private static void FileSystemVisitorOnExclude(object sender, FileExcludeEventArgs e)
