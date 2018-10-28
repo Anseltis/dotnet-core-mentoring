@@ -8,6 +8,7 @@ using ESystems.Mentoring.FileSystem.Interface;
 using ESystems.Mentoring.FileSystem.Interface.Data;
 using ESystems.Mentoring.FileSystem.Interface.Exceptions;
 using ESystems.Mentoring.FileVisiting;
+using AutoFixture;
 
 namespace FileVisitingTest
 {
@@ -78,13 +79,16 @@ namespace FileVisitingTest
         [Fact]
         public void Visit_TwoFoldersThreeFilesNoFilter_ThreeFiles()
         {
-            var path = "path";
-            var folder1 = new FolderData("folder1", "folder1");
-            var folder2 = new FolderData("folder2", "folder2");
+            var fixture = new Fixture();
 
-            var file1 = new FileData("file1", "file1");
-            var file2 = new FileData("file2", "file2");
-            var file3 = new FileData("file3", "file3");
+            var path = fixture.Create<string>();
+
+            var folder1 = new FolderData(fixture.Create<string>(), fixture.Create<string>());
+            var folder2 = new FolderData(fixture.Create<string>(), fixture.Create<string>());
+
+            var file1 = new FileData(fixture.Create<string>(), fixture.Create<string>());
+            var file2 = new FileData(fixture.Create<string>(), fixture.Create<string>());
+            var file3 = new FileData(fixture.Create<string>(), fixture.Create<string>());
 
             var service = A.Fake<IFileSystemService>(options => options.Strict());
             A.CallTo(() => service.GetFolders(path)).Returns(new [] {folder1, folder2});
@@ -105,13 +109,16 @@ namespace FileVisitingTest
         [Fact]
         public void Visit_TwoFoldersThreeFilesFilterForSecondFile_OneFile()
         {
-            var path = "path";
-            var folder1 = new FolderData("folder1", "folder1");
-            var folder2 = new FolderData("folder2", "folder2");
+            var fixture = new Fixture();
 
-            var file1 = new FileData("file1", "file1");
-            var file2 = new FileData("file2", "file2");
-            var file3 = new FileData("file3", "file3");
+            var path = fixture.Create<string>();
+
+            var folder1 = new FolderData(fixture.Create<string>(), fixture.Create<string>());
+            var folder2 = new FolderData(fixture.Create<string>(), fixture.Create<string>());
+
+            var file1 = new FileData(fixture.Create<string>(), fixture.Create<string>());
+            var file2 = new FileData(fixture.Create<string>(), fixture.Create<string>());
+            var file3 = new FileData(fixture.Create<string>(), fixture.Create<string>());
 
             var service = A.Fake<IFileSystemService>(options => options.Strict());
             A.CallTo(() => service.GetFolders(path)).Returns(new[] { folder1, folder2 });
@@ -134,13 +141,16 @@ namespace FileVisitingTest
         [Fact]
         public void Visit_TwoFoldersSeceondWithAccessDenied_AccessDenied()
         {
-            var path = "path";
-            var folder1 = new FolderData("folder1", "folder1");
-            var folder2 = new FolderData("folder2", "folder2");
+            var fixture = new Fixture();
 
-            var file1 = new FileData("file1", "file1");
-            var file2 = new FileData("file2", "file2");
-            var file3 = new FileData("file3", "file3");
+            var path = fixture.Create<string>();
+
+            var folder1 = new FolderData(fixture.Create<string>(), fixture.Create<string>());
+            var folder2 = new FolderData(fixture.Create<string>(), fixture.Create<string>());
+
+            var file1 = new FileData(fixture.Create<string>(), fixture.Create<string>());
+            var file2 = new FileData(fixture.Create<string>(), fixture.Create<string>());
+            var file3 = new FileData(fixture.Create<string>(), fixture.Create<string>());
 
             var service = A.Fake<IFileSystemService>(options => options.Strict());
             A.CallTo(() => service.GetFolders(path)).Returns(new[] {folder1, folder2});
