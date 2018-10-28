@@ -4,7 +4,7 @@ using System.Runtime.Serialization;
 namespace ESystems.Mentoring.ProgramL01.Exceptions
 {
     [Serializable]
-    public sealed class NotDigitParseIntException : Exception
+    public sealed class NotDigitParseIntException : ParseIntException
     {
         public NotDigitParseIntException(char character, Exception innerException)
             : base($"'{character}' is not a digit", innerException)

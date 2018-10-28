@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Linq;
 using FakeItEasy;
 using FluentAssertions;
 using Xunit;
 
 using ESystems.Mentoring.FileSystem.Interface;
 using ESystems.Mentoring.FileSystem.Interface.Data;
+using ESystems.Mentoring.FileSystem.Interface.Exceptions;
 using ESystems.Mentoring.FileVisiting;
 
 namespace FileVisitingTest
@@ -37,7 +39,7 @@ namespace FileVisitingTest
             Assert.Null(Record.Exception(() =>
             {
                 var service = A.Fake<IFileSystemService>();
-                Func<FileData, bool> predicate = file => false;
+                bool predicate(FileData file) => false;
                 var visitor = new FileSystemVisitor(service, predicate);
             }));
         }
@@ -47,7 +49,7 @@ namespace FileVisitingTest
         {
             Record.Exception(() =>
                 {
-                    Func<FileData, bool> predicate = file => false;
+                    bool predicate(FileData file) => false;
                     var visitor = new FileSystemVisitor(null, predicate);
                 }).Should().BeOfType<ArgumentNullException>()
                 .Which.ParamName.Should().Be("fileSystemService");
@@ -71,6 +73,91 @@ namespace FileVisitingTest
             {
                 var visitor = new FileSystemVisitor(null, null);
             }).Should().BeOfType<ArgumentNullException>();
+        }
+
+        [Fact]
+        public void Visit_TwoFoldersThreeFilesNoFilter_ThreeFiles()
+        {
+            var path = "path";
+            var folder1 = new FolderData("folder1", "folder1");
+            var folder2 = new FolderData("folder2", "folder2");
+
+            var file1 = new FileData("file1", "file1");
+            var file2 = new FileData("file2", "file2");
+            var file3 = new FileData("file3", "file3");
+
+            var service = A.Fake<IFileSystemService>(options => options.Strict());
+            A.CallTo(() => service.GetFolders(path)).Returns(new [] {folder1, folder2});
+            A.CallTo(() => service.GetFiles(folder1.FullName)).Returns(new[] { file1, file2 });
+            A.CallTo(() => service.GetFiles(folder2.FullName)).Returns(new[] { file3 });
+            var visitor = new FileSystemVisitor(service);
+
+            var expected = new[] {file1, file2, file3};
+            var actual = visitor.Visit(path).ToArray();
+            
+            actual.Should().BeEquivalentTo(expected);
+
+            A.CallTo(() => service.GetFolders(path)).MustHaveHappenedOnceExactly()
+                .Then(A.CallTo(() => service.GetFiles(folder1.FullName)).MustHaveHappenedOnceExactly())
+                .Then(A.CallTo(() => service.GetFiles(folder2.FullName)).MustHaveHappenedOnceExactly());
+        }
+
+        [Fact]
+        public void Visit_TwoFoldersThreeFilesFilterForSecondFile_OneFile()
+        {
+            var path = "path";
+            var folder1 = new FolderData("folder1", "folder1");
+            var folder2 = new FolderData("folder2", "folder2");
+
+            var file1 = new FileData("file1", "file1");
+            var file2 = new FileData("file2", "file2");
+            var file3 = new FileData("file3", "file3");
+
+            var service = A.Fake<IFileSystemService>(options => options.Strict());
+            A.CallTo(() => service.GetFolders(path)).Returns(new[] { folder1, folder2 });
+            A.CallTo(() => service.GetFiles(folder1.FullName)).Returns(new[] { file1, file2 });
+            A.CallTo(() => service.GetFiles(folder2.FullName)).Returns(new[] { file3 });
+
+            bool predicate(FileData file) => file == file2;
+            var visitor = new FileSystemVisitor(service, predicate);
+
+            var expected = new[] { file2 };
+            var actual = visitor.Visit(path).ToArray();
+
+            actual.Should().BeEquivalentTo(expected);
+
+            A.CallTo(() => service.GetFolders(path)).MustHaveHappenedOnceExactly()
+                .Then(A.CallTo(() => service.GetFiles(folder1.FullName)).MustHaveHappenedOnceExactly())
+                .Then(A.CallTo(() => service.GetFiles(folder2.FullName)).MustHaveHappenedOnceExactly());
+        }
+
+        [Fact]
+        public void Visit_TwoFoldersSeceondWithAccessDenied_AccessDenied()
+        {
+            var path = "path";
+            var folder1 = new FolderData("folder1", "folder1");
+            var folder2 = new FolderData("folder2", "folder2");
+
+            var file1 = new FileData("file1", "file1");
+            var file2 = new FileData("file2", "file2");
+            var file3 = new FileData("file3", "file3");
+
+            var service = A.Fake<IFileSystemService>(options => options.Strict());
+            A.CallTo(() => service.GetFolders(path)).Returns(new[] {folder1, folder2});
+            A.CallTo(() => service.GetFiles(folder1.FullName)).Returns(new[] {file1, file2});
+            A.CallTo(() => service.GetFiles(folder2.FullName))
+                .Throws(new AccessDeniedFileSystemServiceException(folder2.FullName));
+
+            Record.Exception(() =>
+                {
+                    var visitor = new FileSystemVisitor(service);
+                    visitor.Visit(path).ToArray();
+                }).Should().BeOfType<AccessDeniedFileSystemServiceException>()
+                .Which.Path.Should().Be(folder2.FullName);
+
+            A.CallTo(() => service.GetFolders(path)).MustHaveHappenedOnceExactly()
+                .Then(A.CallTo(() => service.GetFiles(folder1.FullName)).MustHaveHappenedOnceExactly())
+                .Then(A.CallTo(() => service.GetFiles(folder2.FullName)).MustHaveHappenedOnceExactly());
         }
     }
 }

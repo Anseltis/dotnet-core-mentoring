@@ -4,7 +4,7 @@ using System.Runtime.Serialization;
 namespace ESystems.Mentoring.ProgramL01.Exceptions
 {
     [Serializable]
-    public sealed class EmptyStringParseIntException : Exception
+    public sealed class EmptyStringParseIntException : ParseIntException
     {
         public EmptyStringParseIntException(Exception innerException)
             : base($"String is empty", innerException)

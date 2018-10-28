@@ -4,7 +4,7 @@ using System.Runtime.Serialization;
 namespace ESystems.Mentoring.ProgramL01.Exceptions
 {
     [Serializable]
-    public sealed class WrongBasisParseIntException : Exception
+    public sealed class WrongBasisParseIntException : ParseIntException
     {
         public WrongBasisParseIntException(int basis, Exception innerException)
             : base($"{basis} is wrong for digital system", innerException)

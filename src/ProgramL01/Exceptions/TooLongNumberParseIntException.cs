@@ -4,7 +4,7 @@ using System.Runtime.Serialization;
 namespace ESystems.Mentoring.ProgramL01.Exceptions
 {
     [Serializable]
-    public sealed class TooLongNumberParseIntException : Exception
+    public sealed class TooLongNumberParseIntException : ParseIntException
     {
         public TooLongNumberParseIntException(int length, int basis, Exception innerException)
             : base($"{length} is too long for the {basis}-base system", innerException)
