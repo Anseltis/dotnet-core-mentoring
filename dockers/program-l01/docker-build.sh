@@ -1,0 +1,1 @@
+docker build -t mentoring-l01 -f ./dockers/program-l01/Dockerfile .

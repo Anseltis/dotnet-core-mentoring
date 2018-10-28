@@ -1,0 +1,1 @@
+docker volume create -d local-persist -o mountpoint=<path to folder> --name=folder-visitor
