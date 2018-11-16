@@ -170,5 +170,34 @@ namespace FileVisitingTest
                 .Then(A.CallTo(() => service.GetFiles(folder1.FullName)).MustHaveHappenedOnceExactly())
                 .Then(A.CallTo(() => service.GetFiles(folder2.FullName)).MustHaveHappenedOnceExactly());
         }
+
+        [Fact]
+        public void Visit_TwoFoldersThreeFilesNoFilterTakeTwo_TwoFilesOneFolder()
+        {
+            var fixture = new Fixture();
+
+            var path = fixture.Create<string>();
+
+
+            var folder1 = fixture.Create<FolderData>();
+            var folder2 = fixture.Create<FolderData>();
+
+            var file1 = fixture.Create<FileData>();
+            var file2 = fixture.Create<FileData>();
+
+            var service = A.Fake<IFileSystemService>(options => options.Strict());
+            A.CallTo(() => service.GetFolders(path)).Returns(new[] { folder1, folder2 });
+            A.CallTo(() => service.GetFiles(folder1.FullName)).Returns(new[] { file1, file2 });
+
+            var visitor = new FileSystemVisitor(service);
+
+            var expected = new[] { file1, file2 };
+            var actual = visitor.Visit(path).Take(2).ToArray();
+
+            actual.Should().BeEquivalentTo(expected);
+
+            A.CallTo(() => service.GetFolders(path)).MustHaveHappenedOnceExactly()
+                .Then(A.CallTo(() => service.GetFiles(folder1.FullName)).MustHaveHappenedOnceExactly());
+        }
     }
 }
